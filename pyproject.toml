@@ -1,0 +1,59 @@
+# pyproject.toml — foxtrot‑vivado‑2024
+# ================================================================
+# AMD / Xilinx Vivado 2024.2 back‑end for Foxtrot’s bit‑gen framework
+# ================================================================
+
+[project]
+name            = "foxtrot-vivado-2024"
+version         = "0.1.0"
+description     = "Foxtrot plug‑in for Vivado 2024."
+readme          = "README.md"
+requires-python = ">=3.9"
+license         = {text = "Apache-2.0"}
+authors         = [{name = "Foxtrot Team", email = "prjfoxtrot@outlook.com"}]
+keywords        = ["foxtrot", "vivado", "fpga", "eda", "plugin"]
+
+# ──────────────── runtime deps ────────────────
+dependencies = ["foxtrot-core>=0.1.0"]
+
+# ──────────────── extras / dev env ────────────────
+[project.optional-dependencies]
+dev = ["ruff", "black", "pytest"]
+
+# ──────────────── links ────────────────
+[project.urls]
+Homepage = "https://github.com/prjfoxtrot/foxtrot-vivado-2024"
+Source   = "https://github.com/prjfoxtrot/foxtrot-vivado-2024"
+Issues   = "https://github.com/prjfoxtrot/foxtrot-vivado-2024/issues"
+
+# ──────────────── Foxtrot plug‑in entry‑point ────────────────
+[project.entry-points."foxtrot.plugins"]
+vivado_2024 = "foxtrot_vivado_2024.eda_plugin:VivadoPlugin"
+
+# ================================================================
+# Build backend – Hatchling (PEP 621 native)
+# ================================================================
+[build-system]
+requires      = ["hatchling>=1.22"]
+build-backend = "hatchling.build"
+
+# --- src layout declaration -------------------------------------
+[tool.hatch.build]
+include = ["src/**"]
+
+# ---------------------------------------------------------------
+# Ship code + TCL assets in wheel and sdist
+# ---------------------------------------------------------------
+[tool.hatch.build.targets.wheel]
+packages = ["src/foxtrot_vivado_2024"]
+include  = ["src/foxtrot_vivado_2024/scripts/tcl/**/*"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/foxtrot_vivado_2024/scripts/tcl/**/*"]
+
+# ──────────────── tooling helpers (optional) ────────────────
+[tool.ruff]
+line-length = 88
+
+[tool.black]
+line-length = 88
