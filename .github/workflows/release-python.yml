@@ -1,0 +1,35 @@
+name: Build wheel & sdist; attach to Release
+
+on:
+  push:
+    tags: ["foxtrot-vivado-2024-v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+
+      - run: |
+          python -m pip install --upgrade build
+          python -m build
+          python -m build --wheel
+
+      - name: Upload dist/* to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name:     ${{ github.ref_name }}
+          draft:    false
+          files: |
+            dist/foxtrot_vivado_2024-*-py3-none-any.whl
+            dist/foxtrot_vivado_2024-*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
